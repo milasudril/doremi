@@ -42,21 +42,6 @@ void Doremi::Midiport::statusReset()
 			{noteOff(channel,note,1.0f);}
 		}
 	}
-
-void Doremi::Midiport::noteOff(unsigned int channel,unsigned int note,float value)
-	{
-	messageSend(messageChannelBuild(channel,0x80,note,(char)(127*value)));
-	}
-
-void Doremi::Midiport::noteOn(unsigned int channel,unsigned int note,float value)
-	{
-	messageSend(messageChannelBuild(channel,0x90,note,(char)(127*value)));
-	}
-
-void Doremi::Midiport::programChange(unsigned int channel,unsigned int program)
-	{
-	messageSend(messageChannelBuild(channel,0xc0,program,0));
-	}
 	
 void Doremi::Midiport::messageSend(Doremi::Midiport::Message msg)
 	{
