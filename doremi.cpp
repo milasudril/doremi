@@ -13,31 +13,10 @@ target[
 
 #include "doremi.h"
 #include "midiport.h"
+#include "chord.h"
 #include <herbs/string.h>
 #include <herbs/stringformat.h>
 #include <herbs/intformat.h>
-
-#include <windows.h>
-
-namespace
-	{
-	struct Note
-		{
-		unsigned int value;
-		unsigned int duration;
-		};
-		
-	void tunePlay(const Note* tune,const Note* end,Doremi::Midiport& port)	
-		{
-		while(tune!=end)
-			{
-			port.noteOn(0,tune->value,1.0f);
-			Sleep(tune->duration);
-			port.noteOff(0,tune->value,1.0f);
-			++tune;
-			}
-		};
-	}
 
 void Doremi::Doremi::init(Herbs::Directory&& options)
 	{
@@ -48,21 +27,8 @@ void Doremi::Doremi::init(Herbs::Directory&& options)
 
 int Doremi::Doremi::run()
 	{
-	Midiport output(midi_out);
-	Note tune[8]=
-		{
-			{60,500}
-			,{62,500}
-			,{64,500}
-			,{65,500}
-			,{67,500}
-			,{69,500}
-			,{71,500}
-			,{72,500}
-		};
-	output.programChange(0,81);
-	tunePlay(tune,tune+8,output);
-	tunePlay(tune,tune+8,output);
+	Chord test(Herbs::String(STR("G##")));
+	
 	
 	return STATUS_OK;
 	}

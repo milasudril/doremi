@@ -33,7 +33,7 @@ namespace Doremi
 			
 			Chord& keySet(char_t key,Keymode mode)
 				{
-				m_key=(keys[ (key-CHAR('A'))%7 ] + (char_t)(mode))%12;
+				m_key=(keys[ (key-CHAR('A'))%7 ] + (char_t)(mode));
 				return *this;
 				}
 			

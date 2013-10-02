@@ -47,17 +47,17 @@ namespace Doremi
 			
 			void statusReset();
 			void noteOn(unsigned int channel,unsigned int note,float value)
-				{messageSend(messageChannelBuild(channel,0x90,note,midiVal(value));}
+				{messageSend(messageChannelBuild(channel,0x90,note,midiVal(value)));}
 				
 			void noteOff(unsigned int channel,unsigned int note,float value)
-				{messageSend(messageChannelBuild(channel,0x80,note,midiVal(value));}
+				{messageSend(messageChannelBuild(channel,0x80,note,midiVal(value)));}
 				
 			void aftertouch(unsigned int channel,float value)
-				{messageSend(messageChannelBuild(channel,0xD0,midiVal(value));}
+				{messageSend(messageChannelBuild(channel,0xD0,midiVal(value),0));}
 				
 			void aftertouch(unsigned int channel,unsigned int note
 				,float value)
-				{messageSend(messageChannelBuild(channel,0xA0,note,midiVal(value));}
+				{messageSend(messageChannelBuild(channel,0xA0,note,midiVal(value)));}
 				
 			void programChange(unsigned int channel,unsigned int program)
 				{messageSend(messageChannelBuild(channel,0xC0,program,0));}
@@ -74,6 +74,7 @@ namespace Doremi
 				{messageSend(messageChannelBuild(channel,0XB0,0x02,midiVal(value)));}
 			void foot(unsigned int channel,float value)
 				{messageSend(messageChannelBuild(channel,0XB0,0x04,midiVal(value)));}
+				
 			void portamento(unsigned int channel,float value);
 			void volume(unsigned int channel,float value);
 			void balance(unsigned int channel,float value);

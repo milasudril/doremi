@@ -11,7 +11,7 @@ target[name[chord.o] type[object]]
 #include <herbs/intformat.h>
 #include <herbs/application.h>
 
-uint8_t Doremi::Chord::keys[7]=
+const uint8_t Doremi::Chord::keys[7]=
 	{
 	0,2,3,5,7,8,10
 	};
@@ -35,11 +35,15 @@ Doremi::Chord::Chord(const Herbs::String& symbol)
 				{
 				case CHAR('#'):
 				case CHAR('♯'):
-					m_key=(m_key+1)%12;
+					m_key=(m_key+1);
+					if(m_key > 11)
+						{m_key=0;}
 					break;
 				case CHAR('b'):
 				case CHAR('♭'):
 					m_key=(m_key-1)%12;
+					if(m_key == 255)
+						{m_key=11;}
 					break;
 				case CHAR('m'):
 					m_mode|=MODE_MINOR;
