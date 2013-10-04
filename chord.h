@@ -6,7 +6,7 @@ target[name[chord.h] type[include]]
 #ifndef CHORD_H
 #define CHORD_H
 
-#include "playable.h"
+#include "noteset.h"
 #include <herbs/chartype.h>
 
 namespace Herbs
@@ -19,36 +19,19 @@ namespace Herbs
 
 namespace Doremi
 	{
-	class Midiport;
-	
-	class Chord:public Playable
+	namespace Chord
 		{
-		public:
-			enum class Keymode{FLAT=-1, NONE=0, SHARP=1};
+		const uint8_t MODE_MINOR=0x1;
+		const uint8_t MODE_SEVEN=0x2;
+		const uint8_t MODE_DIM=0x4;
+		const uint8_t MODE_MINUS5=0x8;
+		const uint8_t MODE_MAX=0xf;
 		
-			Chord(const Herbs::String& symbol);
+		enum class Keymode{FLAT=-1,NORMAL=0,SHARP=1};
 		
-			void play(Midiport& port,unsigned int channel);
-			void stop(Midiport& port,unsigned int channel);
-			
-			Chord& keySet(char_t key,Keymode mode)
-				{
-				m_key=(keys[ (key-CHAR('A'))%7 ] + (char_t)(mode));
-				return *this;
-				}
-			
-
-		private:
-			static const uint8_t MODE_MINOR=0x1;
-			static const uint8_t MODE_SEVEN=0x2;
-			static const uint8_t MODE_DIM=0x4;
-			static const uint8_t MODE_MINUS5=0x8;
-			
-			static const uint8_t keys[7];
-		
-			int8_t m_key;
-			int8_t m_mode;
-		};
+		Noteset make(const Herbs::String& symbol);
+		Noteset make(unsigned int note,unsigned int mode);
+		}
 	}
 
 #endif

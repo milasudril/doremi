@@ -27,7 +27,17 @@ void Doremi::Doremi::init(Herbs::Directory&& options)
 
 int Doremi::Doremi::run()
 	{
-	Chord test(Herbs::String(STR("G##")));
+	Chord::make(Herbs::String(STR("A")));
+	Chord::make(Herbs::String(STR("A7")));
+	Chord::make(Herbs::String(STR("Aaug")));
+	Chord::make(Herbs::String(STR("Adim")));
+	Chord::make(Herbs::String(STR("Adim7")));
+	Chord::make(Herbs::String(STR("Am")));
+	Chord::make(Herbs::String(STR("Am7")));
+	Chord::make(Herbs::String(STR("Am7-5")));
+	Chord::make(Herbs::String(STR("Amaj7")));
+	Chord::make(Herbs::String(STR("Asus4")));
+	Chord::make(Herbs::String(STR("Asus47")));
 	
 	
 	return STATUS_OK;
