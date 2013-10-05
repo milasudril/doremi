@@ -39,7 +39,12 @@ void Doremi::Midiport::statusReset()
 	for(unsigned int channel=0;channel<16;++channel)
 		{
 		for(unsigned int note=0;note<128;++note)
-			{noteOff(channel,note,1.0f);}
+			{
+			noteOff(channel,note,1.0f);
+			Sleep(1);
+			}
+		programChange(channel,0);
+		Sleep(1);
 		}
 	}
 	
@@ -51,5 +56,6 @@ void Doremi::Midiport::messageSend(Doremi::Midiport::Message msg)
 	
 Doremi::Midiport::~Midiport()
 	{
+	statusReset();
 	midiOutClose((HMIDIOUT)handle);
 	}

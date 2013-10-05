@@ -26,7 +26,7 @@ namespace Doremi
 				return *this;
 				}
 		
-			unsigned int operator[](size_t index)
+			unsigned int operator[](size_t index) const
 				{return data_array[index] + note_base;}
 			
 			size_t nNotes() const

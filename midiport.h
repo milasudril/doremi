@@ -90,7 +90,7 @@ namespace Doremi
 			void messageSend(Message msg);
 			
 			uint8_t midiVal(float x)
-				{return (uint8_t)(x/128);}
+				{return (uint8_t)(x*127);}
 			
 			
 		private:
