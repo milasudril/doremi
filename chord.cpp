@@ -14,12 +14,6 @@ target[name[chord.o] type[object]]
 
 namespace
 	{
-	const uint8_t keys[7]={0,2,3,5,7,8,10};
-	int8_t keySet(char_t key,Doremi::Chord::Keymode mode)
-		{
-		return keys[key-CHAR('A')]+(int8_t)mode;
-		}
-		
 	struct Chordtype
 		{
 		const char_t* name;
@@ -92,7 +86,7 @@ Doremi::Noteset Doremi::Chord::make(const Herbs::String& symbol)
 			case 0:
 				if(*i<'A' || *i>'G')
 					{throw Herbs::ExceptionMissing(___FILE__,__LINE__);}
-				m_key=keySet(*i, Keymode::NORMAL);
+				m_key=keyvalGet(*i, Keymode::NORMAL);
 				break;
 			case 1:
 				switch(*i)

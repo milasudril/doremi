@@ -13,7 +13,7 @@ target[
 
 #include "doremi.h"
 #include "midiport.h"
-#include "chord.h"
+#include "scale.h"
 #include <herbs/string.h>
 #include <herbs/stringformat.h>
 #include <herbs/intformat.h>
@@ -27,74 +27,22 @@ void Doremi::Doremi::init(Herbs::Directory&& options)
 		,{STR("UA-25"),Herbs::IntFormat<unsigned int>(midi_out)}));
 	}
 
-void chordsPlay(const Doremi::Noteset* begin,const Doremi::Noteset* end
-,Doremi::Midiport& device)
-	{
-	while(begin!=end)
-		{
-		for(size_t i=0;i<begin->nNotes();++i)
-			{
-			device.noteOn(0,(*begin)[i],1);
-			}
-		Sleep(2000);
-		for(size_t i=0;i<begin->nNotes();++i)
-			{
-			device.noteOff(0,(*begin)[i],1);
-			}		
-		++begin;
-		}
-	}
 
 
 int Doremi::Doremi::run()
 	{
 	Midiport synth(midi_out);
-	synth.programChange(0,50);
-	
-	Noteset chords[11]=
+	Noteset scale=Scale::make(CHAR('C'),Keymode::NORMAL,-5,1);
+	sysout().print(Herbs::String(Herbs::IntFormat<int>(scale.nNotes())));
+	int i_prev=5;
+	while(1)
 		{
-		 Chord::make(Herbs::String(STR("A")))
-		,Chord::make(Herbs::String(STR("A7")))
-		,Chord::make(Herbs::String(STR("Aaug")))
-		,Chord::make(Herbs::String(STR("Adim")))
-		,Chord::make(Herbs::String(STR("Adim7")))
-		,Chord::make(Herbs::String(STR("Am")))
-		,Chord::make(Herbs::String(STR("Am7")))
-		,Chord::make(Herbs::String(STR("Am7-5")))
-		,Chord::make(Herbs::String(STR("Amaj7")))
-		,Chord::make(Herbs::String(STR("Asus4")))
-		,Chord::make(Herbs::String(STR("Asus47")))
-		};
-	
-	chordsPlay(chords,chords+11,synth);
-	
-	Noteset chords2[7*3]=
-		{
-		 Chord::make(Herbs::String(STR("A")))
-		,Chord::make(Herbs::String(STR("A#")))
-		,Chord::make(Herbs::String(STR("Ab")))
-		,Chord::make(Herbs::String(STR("B")))
-		,Chord::make(Herbs::String(STR("B#")))
-		,Chord::make(Herbs::String(STR("Bb")))
-		,Chord::make(Herbs::String(STR("C")))
-		,Chord::make(Herbs::String(STR("C#")))
-		,Chord::make(Herbs::String(STR("Cb")))
-		,Chord::make(Herbs::String(STR("D")))
-		,Chord::make(Herbs::String(STR("D#")))
-		,Chord::make(Herbs::String(STR("Db")))
-		,Chord::make(Herbs::String(STR("E")))
-		,Chord::make(Herbs::String(STR("E#")))
-		,Chord::make(Herbs::String(STR("Eb")))
-		,Chord::make(Herbs::String(STR("F")))
-		,Chord::make(Herbs::String(STR("F#")))
-		,Chord::make(Herbs::String(STR("Fb")))
-		,Chord::make(Herbs::String(STR("G")))
-		,Chord::make(Herbs::String(STR("G#")))
-		,Chord::make(Herbs::String(STR("Gb")))
-		};
-	
-	chordsPlay(chords2,chords2+21,synth);
-	
+		int i=0.5*(rand()%16 + i_prev);
+		synth.noteOn(0,scale[i],1);
+		Sleep(500);
+		synth.noteOff(0,scale[i],1);
+		i_prev=i;
+		}
 	
 	return STATUS_OK;
 	}
