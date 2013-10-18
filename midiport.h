@@ -7,6 +7,8 @@ target[name[midiport.h] type[include]]
 #define MIDIPORT_H
 
 #include <herbs/chartype.h>
+#include <deque>
+#include <utility>
 
 namespace Herbs
 	{
@@ -18,6 +20,10 @@ namespace Herbs
 
 namespace Doremi
 	{
+	/**MIDI I/O class.
+	* \todo This class needs a que based on Herbs::Memblock since the que is
+	* less likely to grow.
+	*/
 	class Midiport
 		{
 		public:
@@ -39,7 +45,10 @@ namespace Doremi
 			
 			static unsigned int deviceFind(const Herbs::String& name);
 			
-			Midiport(unsigned int id);
+			/**Initiates midiport id.
+			* \param ticlenth is the delay between tics in seconds.
+			*/
+			Midiport(unsigned int id /*, double ticlength*/);
 			Midiport(const Midiport&)=delete;
 			Midiport& operator=(const Midiport& port)=delete;
 			
@@ -87,13 +96,17 @@ namespace Doremi
 				return Message(channel|code,v_0,v_1);
 				}
 			
-			void messageSend(Message msg);
+			void messageSend(Message msg,unsigned int delay=0)
+				{
+				messages.push_back(std::pair<unsigned int,Message>(delay,msg));
+				}
 			
 			uint8_t midiVal(float x)
 				{return (uint8_t)(x*127);}
 			
 			
 		private:
+			std::deque<std::pair<unsigned int,Message> > messages;
 			void* handle;
 		};
 	}

@@ -8,6 +8,8 @@ dependencies[winmm]]
 #include <herbs/exceptionmissing.h>
 #include <windows.h>
 
+
+
 unsigned int Doremi::Midiport::deviceFind(const Herbs::String& name)
 	{
 	UINT n_devs=midiOutGetNumDevs();
@@ -48,9 +50,27 @@ void Doremi::Midiport::statusReset()
 		}
 	}
 	
-void Doremi::Midiport::messageSend(Doremi::Midiport::Message msg)
+static void peak(void* handle,std::deque<std::pair<unsigned int,Doremi::Midiport::Message>& msg)
 	{
-	midiOutShortMsg((HMIDIOUT)handle,msg.data.value);
+	if(msg.empty())
+		{return;}
+	auto message=msg.first();
+
+	do
+		{
+		if(message.first)
+			{
+			Sleep(250); //Use interval timer!
+			--message.first;
+			}
+		else
+			{
+			msg.pop_front();
+			midiOutShortMsg((HMIDIOUT)handle,message.second.data.value);
+			message=msg.first();
+			}
+		}
+	while(!msg.empty());
 	}
 
 	
