@@ -17,6 +17,10 @@ target[
 #include <herbs/string.h>
 #include <herbs/stringformat.h>
 #include <herbs/intformat.h>
+#include <herbs/eventqueue.h>
+#include <herbs/timer.h>
+#include <herbs/thread.h>
+#include <eventqueuerunner.h>
 
 #include <windows.h>
 
@@ -27,23 +31,35 @@ void Doremi::Doremi::init(Herbs::Directory&& options)
 		,{STR("UA-25"),Herbs::IntFormat<unsigned int>(midi_out)}));
 	}
 
-
-
 int Doremi::Doremi::run()
 	{
-	Midiport synth(midi_out);
-	Noteset scale=Scale::make(CHAR('C'),Keymode::NORMAL,-5,1);
-	sysout().print(Herbs::String(Herbs::IntFormat<int>(scale.nNotes())));
-	int i_prev=5;
+	Herbs::EventQueue q_out;
+	double T=60.0/(3.0*160.0);
+
+	Herbs::Timer metronome(Herbs::Timer::frequencyGet()*T);
+	Midiport synth(midi_out,q_out);
+	
+	Noteset scale=Scale::make(CHAR('D'),Keymode::SHARP,-5,1);
+
+	EventQueueRunner conductor(metronome,q_out);
+	Herbs::Thread player(conductor);
+	
+	synth.programChange(0,33,0);
 	while(1)
 		{
-		int i=0.5*(rand()%16 + i_prev);
-		synth.noteOn(0,scale[i],1);
-		Sleep(500);
-		synth.noteOff(0,scale[i],1);
-		i_prev=i;
+		synth.noteOn(0,scale[5]-24,0.5,1);
+		synth.noteOff(0,scale[5]-24,0.5,2);
+		synth.noteOn(0,scale[7]-24,0.5,1);
+		synth.noteOff(0,scale[7]-24,0.5,2);
+		synth.noteOn(0,scale[10]-24,0.5,1);
+		synth.noteOff(0,scale[10]-24,0.5,2);
+		synth.noteOn(0,scale[7]-24,0.5,1);
+		synth.noteOff(0,scale[7]-24,0.5,2);
+		
+		q_out.wait();
 		}
 	
+	printf("Waiting for player thread\n");
 	return STATUS_OK;
 	}
 
